@@ -10,14 +10,17 @@
 
 <header class="site-header">
   <div class="container nav-wrap">
-    <a href="index.html" class="logo">
-      <span class="logo-full">Arunkumar Panchanana</span>
-      <span class="logo-short">Arunkumar</span>
-    </a>
+    <a href="index.html" class="logo">Arunkumar Panchanana</a>
 
-    <nav class="nav">
-      <a href="index.html" class="active">Home</a>
-      <a href="about.html">About</a>
+    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="nav" id="site-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html" class="active">About</a>
       <a href="tools.html">Tools</a>
     </nav>
   </div>
@@ -78,6 +81,17 @@
     <p>Email: <a href="mailto:arunkumar.panchanana@gmail.com">arunkumar.panchanana@gmail.com</a></p>
   </div>
 </footer>
+
+<script>
+  const toggleButton = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('#site-nav');
+
+  toggleButton.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('nav-open');
+    toggleButton.classList.toggle('menu-open');
+    toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+</script>
 
 </body>
 </html>
