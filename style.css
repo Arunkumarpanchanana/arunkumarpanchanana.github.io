@@ -23,9 +23,15 @@ body {
 }
 
 .logo {
-  font-weight: bold;
-  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
   text-decoration: none;
+  letter-spacing: 0.3px;
+}
+
+.logo:hover {
+  color: #3B82F6;
 }
 
 .nav a {
