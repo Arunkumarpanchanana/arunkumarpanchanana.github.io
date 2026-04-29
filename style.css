@@ -41,39 +41,50 @@ a {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(8, 26, 51, 0.92);
+  background: rgba(8, 26, 51, 0.94);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
 }
 
 .nav-wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
   min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .logo {
-  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
   font-weight: 700;
   color: var(--white);
   letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
-.logo:hover {
-  color: #cfe0ff;
+.logo-full {
+  display: inline;
+  font-size: 1.1rem;
+}
+
+.logo-short {
+  display: none;
+  font-size: 1rem;
 }
 
 .nav {
   display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
 }
 
 .nav a {
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 0.96rem;
+  white-space: nowrap;
 }
 
 .nav a:hover,
@@ -202,53 +213,32 @@ h1 {
   color: #d8e5ff;
 }
 
-@media (max-width: 768px) {
-  .nav-wrap {
-    flex-direction: column;
-    justify-content: center;
-    padding: 14px 0;
-  }
-
-  .nav {
-    justify-content: center;
-  }
-
-  h1 {
-    max-width: none;
-    font-size: 2.2rem;
-  }
-
-  .hero,
-  .page-hero {
-    padding: 56px 0 36px;
-  }
-
-  .hero-text {
-    font-size: 1rem;
-  }
-
+@media (max-width: 900px) {
   .card-grid {
     grid-template-columns: 1fr;
   }
 
-  .button-row {
-    flex-direction: column;
-  }
-
-  .button {
-    width: 100%;
-    text-align: center;
+  h1 {
+    max-width: none;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .container {
     width: min(100% - 24px, var(--max-width));
   }
 
-  .logo {
-    font-size: 0.98rem;
-    text-align: center;
+  .nav-wrap {
+    min-height: 64px;
+    gap: 10px;
+  }
+
+  .logo-full {
+    display: none;
+  }
+
+  .logo-short {
+    display: inline;
   }
 
   .nav {
@@ -259,12 +249,47 @@ h1 {
     font-size: 0.92rem;
   }
 
+  .hero,
+  .page-hero {
+    padding: 56px 0 36px;
+  }
+
   h1 {
-    font-size: 1.9rem;
+    font-size: 2.1rem;
+  }
+
+  .hero-text {
+    font-size: 1rem;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
   }
 
   .card {
     padding: 18px;
-    border-radius: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .logo-short {
+    font-size: 0.95rem;
+  }
+
+  .nav {
+    gap: 10px;
+  }
+
+  .nav a {
+    font-size: 0.88rem;
+  }
+
+  h1 {
+    font-size: 1.9rem;
   }
 }
