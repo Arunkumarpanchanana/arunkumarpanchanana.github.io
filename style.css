@@ -71,10 +71,16 @@ img {
 }
 
 .logo {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  letter-spacing: 0.2px;
-  color: var(--white);
+  color: white;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+.logo:hover {
+  color: #3B82F6;
+}
 }
 
 .nav {
