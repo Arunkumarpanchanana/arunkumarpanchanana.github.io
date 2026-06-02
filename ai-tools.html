@@ -1,505 +1,640 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tools Compendium 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Chosen Palette: Warm Neutrals (Alabaster background #FDFCF7, Stone borders #E6E4DD, Dark Charcoal text #3A3532, with Muted Earth/Terracotta accents) -->
-    <!-- Application Structure Plan: A dynamic directory and dashboard. The UI is split into a high-level analytics dashboard (to understand tool distributions) and a tabbed interactive grid (to replace the Excel 'sheets' requested by the user). Tabs separate the tools into 'General AI', 'Orchestrators', and 'Open Source'. This allows for easy scanning, searching, and filtering of a dense dataset without overwhelming the user. -->
-    <!-- Visualization & Content Choices: 
-         - Overview Stats: Goal is to inform. Presented as dynamic text metrics.
-         - Category Distribution: Goal is to organize/compare. Presented as a Doughnut Chart (Chart.js) to show the proportion of tools in different domains.
-         - Pricing Models: Goal is to compare. Presented as a Bar Chart (Chart.js) to show the breakdown of free vs paid tools.
-         - Interactive Directory: Goal is exploration/retrieval. Presented as a responsive grid of cards with live search and category/bucket filtering.
-         Library/Method: Chart.js for visualizations, Vanilla JS for state & filtering, Tailwind for layout. No SVG or Mermaid used. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Tools Compendium 2026 | Arunkumar Panchanana</title>
+  <meta name="description" content="Interactive directory of 40+ AI tools across General AI, Orchestrators, and Open Source categories." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/favicon/favicon.ico" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .ai-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 16px;
+    }
 
-    <style>
-        body {
-            background-color: #FDFCF7;
-            color: #3A3532;
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-        
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-            background: white;
-            border-radius: 0.75rem;
-            padding: 1rem;
-            border: 1px solid #E6E4DD;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+    .ai-header {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
 
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
+    .ai-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin: 0 0 12px;
+      color: var(--white);
+    }
 
-        .tool-card {
-            background-color: #FFFFFF;
-            border: 1px solid #E6E4DD;
-            transition: all 0.2s ease-in-out;
-        }
+    .ai-header p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
 
-        .tool-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-            border-color: #D4D0C5;
-        }
+    .ai-section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
 
-        .tab-btn {
-            transition: all 0.2s;
-        }
-        
-        .tab-active {
-            background-color: #3A3532;
-            color: #FFFFFF;
-            border-color: #3A3532;
-        }
+    .ai-section-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
 
-        .tab-inactive {
-            background-color: transparent;
-            color: #6B655F;
-            border-color: #E6E4DD;
-        }
-        
-        .tab-inactive:hover {
-            background-color: #F0EFEA;
-        }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
 
-        .badge-general { background-color: #E0E7FF; color: #3730A3; }
-        .badge-orchestrator { background-color: #FEF3C7; color: #92400E; }
-        .badge-opensource { background-color: #D1FAE5; color: #065F46; }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
 
-        .trust-high { color: #059669; }
-        .trust-moderate { color: #D97706; }
-        .trust-low { color: #DC2626; }
-    </style>
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .metric-value.green { color: var(--accent-green); }
+    .metric-value.amber { color: var(--accent-amber); }
+    .metric-value.purple { color: var(--accent-purple); }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .chart-wrapper {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      height: 300px;
+    }
+
+    .chart-wrapper h3 {
+      text-align: center;
+      font-size: 0.95rem;
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .chart-wrapper canvas {
+      max-height: 240px;
+    }
+
+    .controls-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .tab-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-active {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+    }
+
+    .tab-inactive {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .tab-inactive:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .search-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .search-group input,
+    .search-group select {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .search-group input:focus,
+    .search-group select:focus {
+      outline: none;
+      border-color: var(--blue);
+    }
+
+    .search-group input { flex: 1; min-width: 160px; }
+    .search-group select { min-width: 140px; }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .tool-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .tool-card:hover {
+      background: var(--card-hover);
+      transform: translateY(-2px);
+    }
+
+    .tool-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .tool-card-header h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      color: var(--white);
+    }
+
+    .tool-rec {
+      font-size: 0.75rem;
+      background: rgba(167,139,250,0.15);
+      color: var(--accent-purple);
+      border: 1px solid rgba(167,139,250,0.2);
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tool-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .badge-general { background: rgba(37,99,235,0.15); color: #93bbff; }
+    .badge-orchestrator { background: rgba(251,191,36,0.15); color: #fcd34d; }
+    .badge-opensource { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+    .badge-category { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+    .tool-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      flex-grow: 1;
+      margin-bottom: 12px;
+    }
+
+    .tool-meta {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      font-size: 0.85rem;
+    }
+
+    .tool-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .tool-meta-label { color: var(--muted); }
+    .tool-meta-value { color: var(--text); font-weight: 500; }
+
+    .trust-high { color: var(--accent-green); }
+    .trust-moderate { color: var(--accent-amber); }
+    .trust-low { color: #f87171; }
+
+    .no-results {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--muted);
+    }
+
+    .no-results .big-icon { font-size: 2.5rem; margin-bottom: 8px; }
+    .no-results button {
+      background: none;
+      border: none;
+      color: var(--blue);
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    @media (min-width: 640px) {
+      .metric-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    @media (min-width: 768px) {
+      .chart-grid { grid-template-columns: 1fr 1fr; }
+      .controls-bar { flex-direction: row; justify-content: space-between; align-items: center; }
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+      .chart-wrapper { height: 350px; }
+    }
+
+    @media (min-width: 1024px) {
+      .tools-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
 </head>
-<body class="antialiased text-gray-800 selection:bg-indigo-100 selection:text-indigo-900">
+<body>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        
-        <!-- Header Section -->
-        <header class="mb-10 border-b border-gray-200 pb-8">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-[#3A3532]">AI Tools Compendium 2026</h1>
-            <p class="text-lg text-gray-600 max-w-3xl">
-                An interactive directory synthesizing your original tool list with deep research into the latest ecosystem developments. 
-                This compendium categorizes the landscape into actionable "sheets": <strong>General AI Tools</strong> for daily productivity, 
-                <strong>Orchestrators & Frameworks</strong> for building complex workflows, and the <strong>Open Source Ecosystem</strong> for private, local deployments.
-            </p>
-        </header>
+  <div id="nav-placeholder"></div>
 
-        <!-- Dashboard Analytics Section -->
-        <section class="mb-14">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold mb-2">Ecosystem Landscape Overview</h2>
-                <p class="text-sm text-gray-600">A high-level analytical view of the AI tools database. These visualizations dynamically update to show the distribution of tool categories and pricing models across the ecosystem, helping you identify trends like the prevalence of partially free access models versus completely open-source alternatives.</p>
-            </div>
-            
-            <!-- Key Metrics -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white p-4 rounded-xl border border-[#E6E4DD] shadow-sm">
-                    <div class="text-sm text-gray-500 font-medium">Total Tools Tracked</div>
-                    <div class="text-3xl font-bold text-[#3A3532]" id="metric-total">0</div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-[#E6E4DD] shadow-sm">
-                    <div class="text-sm text-gray-500 font-medium">Open Source Solutions</div>
-                    <div class="text-3xl font-bold text-emerald-600" id="metric-os">0</div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-[#E6E4DD] shadow-sm">
-                    <div class="text-sm text-gray-500 font-medium">Orchestrators/Agents</div>
-                    <div class="text-3xl font-bold text-amber-600" id="metric-orch">0</div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-[#E6E4DD] shadow-sm">
-                    <div class="text-sm text-gray-500 font-medium">Highly Recommended</div>
-                    <div class="text-3xl font-bold text-indigo-600" id="metric-rec">0</div>
-                </div>
-            </div>
+  <main>
+    <div class="ai-page">
 
-            <!-- Charts -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="flex flex-col items-center w-full">
-                    <h3 class="text-md font-semibold text-center mb-2">Tools by Category</h3>
-                    <div class="chart-container">
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center w-full">
-                    <h3 class="text-md font-semibold text-center mb-2">Pricing Models</h3>
-                    <div class="chart-container">
-                        <canvas id="pricingChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <header class="ai-header">
+        <h1>AI Tools Compendium 2026</h1>
+        <p>
+          An interactive directory of the AI tools ecosystem. Categorized into <strong>General AI Tools</strong> for daily productivity,
+          <strong>Orchestrators &amp; Frameworks</strong> for building complex workflows, and the <strong>Open Source Ecosystem</strong> for private, local deployments.
+        </p>
+      </header>
 
-        <!-- Interactive Database Section -->
-        <section>
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold mb-2">Interactive Tool Directory</h2>
-                <p class="text-sm text-gray-600 mb-4">Explore the categorized database. Use the tabs below to switch between the logical "sheets" you requested (General, Orchestrators, Open Source). Use the search and category filters to narrow down the list to find the exact tool you need for your use case.</p>
-                
-                <!-- Controls: Tabs & Search -->
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl border border-[#E6E4DD] shadow-sm">
-                    
-                    <!-- Bucket Tabs -->
-                    <div class="flex flex-wrap gap-2" id="bucket-tabs">
-                        <button class="tab-btn tab-active px-4 py-2 rounded-lg text-sm font-medium border" data-bucket="All">All Entities</button>
-                        <button class="tab-btn tab-inactive px-4 py-2 rounded-lg text-sm font-medium border flex items-center gap-2" data-bucket="General AI Tools">✨ General AI</button>
-                        <button class="tab-btn tab-inactive px-4 py-2 rounded-lg text-sm font-medium border flex items-center gap-2" data-bucket="Orchestrators & Agents">⚙️ Orchestrators</button>
-                        <button class="tab-btn tab-inactive px-4 py-2 rounded-lg text-sm font-medium border flex items-center gap-2" data-bucket="Open Source">🔓 Open Source</button>
-                    </div>
+      <section>
+        <div>
+          <h2 class="ai-section-title">Ecosystem Landscape Overview</h2>
+          <p class="ai-section-desc">
+            High-level analytics showing tool distribution across categories and pricing models.
+          </p>
+        </div>
 
-                    <!-- Search & Filter -->
-                    <div class="flex w-full md:w-auto gap-2">
-                        <input type="text" id="searchInput" placeholder="Search tools or use cases..." class="w-full md:w-64 px-4 py-2 border border-[#E6E4DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3A3532] text-sm">
-                        <select id="categoryFilter" class="px-4 py-2 border border-[#E6E4DD] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3A3532] text-sm bg-white">
-                            <option value="All">All Categories</option>
-                            <!-- Options injected via JS -->
-                        </select>
-                    </div>
-                </div>
-            </div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Total Tools Tracked</div>
+            <div class="metric-value" id="metric-total">0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Open Source Solutions</div>
+            <div class="metric-value green" id="metric-os">0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Orchestrators/Agents</div>
+            <div class="metric-value amber" id="metric-orch">0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Highly Recommended</div>
+            <div class="metric-value purple" id="metric-rec">0</div>
+          </div>
+        </div>
 
-            <!-- Grid Container -->
-            <div id="tools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Cards injected via JS -->
-            </div>
-            
-            <div id="no-results" class="hidden text-center py-12 text-gray-500">
-                <div class="text-4xl mb-2">🔍</div>
-                <p>No tools found matching your current filters.</p>
-                <button id="clear-filters" class="mt-4 text-[#3A3532] underline text-sm hover:text-indigo-600">Clear all filters</button>
-            </div>
-        </section>
+        <div class="chart-grid">
+          <div class="chart-wrapper">
+            <h3>Tools by Category</h3>
+            <canvas id="categoryChart"></canvas>
+          </div>
+          <div class="chart-wrapper">
+            <h3>Pricing Models</h3>
+            <canvas id="pricingChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div>
+          <h2 class="ai-section-title">Interactive Tool Directory</h2>
+          <p class="ai-section-desc">
+            Explore the database. Use tabs to switch between categories. Search and filter to find the right tool.
+          </p>
+        </div>
+
+        <div class="controls-bar">
+          <div class="tab-group" id="bucket-tabs">
+            <button class="tab-btn tab-active" data-bucket="All">All Entities</button>
+            <button class="tab-btn tab-inactive" data-bucket="General AI Tools">✨ General AI</button>
+            <button class="tab-btn tab-inactive" data-bucket="Orchestrators &amp; Agents">⚙️ Orchestrators</button>
+            <button class="tab-btn tab-inactive" data-bucket="Open Source">🔓 Open Source</button>
+          </div>
+          <div class="search-group">
+            <input type="text" id="searchInput" placeholder="Search tools or use cases...">
+            <select id="categoryFilter">
+              <option value="All">All Categories</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="tools-container" class="tools-grid"></div>
+
+        <div id="no-results" class="no-results" style="display: none;">
+          <div class="big-icon">🔍</div>
+          <p>No tools found matching your current filters.</p>
+          <button id="clear-filters">Clear all filters</button>
+        </div>
+      </section>
 
     </div>
+  </main>
 
-    <script>
-        // Data Structure combining user's original data with expanded research
-        const aiToolsData = [
-            // BUCKET: General AI Tools (Original & Updates)
-            { name: "ChatGPT", bucket: "General AI Tools", category: "Chatbot", primaryUse: "General Assistance, Logic, Multi-modal", pricing: "Partially Free", trust: "High", recommended: true, desc: "Massive ecosystem & multimodal features. Automates complex reasoning." },
-            { name: "Claude (Anthropic)", bucket: "General AI Tools", category: "Chatbot", primaryUse: "Long-context, Human Writing", pricing: "Partially Free", trust: "High", recommended: true, desc: "Superior human tone and safe coding. Excellent for 100+ page PDF summarization." },
-            { name: "Perplexity", bucket: "General AI Tools", category: "Search", primaryUse: "AI-Powered Research", pricing: "Partially Free", trust: "High", recommended: true, desc: "Real-time web search with citations. Replaces traditional search for deep facts." },
-            { name: "Gemini", bucket: "General AI Tools", category: "Chatbot", primaryUse: "Google Ecosystem Integration", pricing: "Partially Free", trust: "High", recommended: true, desc: "Native access to Gmail, Docs, Drive. Seamless workspace automation." },
-            { name: "Microsoft Copilot", bucket: "General AI Tools", category: "Chatbot", primaryUse: "Enterprise Workflows", pricing: "Partially Free", trust: "High", recommended: true, desc: "Deep integration with Word, Excel, OS. Drafts emails and presentations fast." },
-            { name: "GitHub Copilot", bucket: "General AI Tools", category: "Coding", primaryUse: "IDE Code Completion", pricing: "Paid", trust: "High", recommended: true, desc: "Industry standard for code generation. Writes boilerplate code much faster." },
-            { name: "Cursor", bucket: "General AI Tools", category: "Coding", primaryUse: "AI-First Code Editor", pricing: "Partially Free", trust: "High", recommended: true, desc: "Understands the entire project codebase. Rapid prototyping & bug fixing." },
-            { name: "Midjourney", bucket: "General AI Tools", category: "Image", primaryUse: "High-Art / Photorealism", pricing: "Paid", trust: "High", recommended: true, desc: "Best overall artistic and realistic quality for brand assets." },
-            { name: "Canva Magic Studio", bucket: "General AI Tools", category: "Design", primaryUse: "Non-Designer Graphics", pricing: "Partially Free", trust: "High", recommended: true, desc: "All-in-one suite. Creating social media kits in seconds." },
-            { name: "Notion AI", bucket: "General AI Tools", category: "Productivity", primaryUse: "Knowledge Management", pricing: "Paid", trust: "High", recommended: true, desc: "Organizing and summarizing company wikis seamlessly within docs." },
-            { name: "DeepSeek", bucket: "General AI Tools", category: "Chatbot", primaryUse: "Coding & Heavy Math", pricing: "Partially Free", trust: "Moderate", recommended: true, desc: "High-level technical problem solving and highly efficient inference." },
-            { name: "Runway Gen-3", bucket: "General AI Tools", category: "Video", primaryUse: "Text-to-Video Generation", pricing: "Paid", trust: "High", recommended: true, desc: "B-roll generation and advanced video manipulation features." },
-            { name: "ElevenLabs", bucket: "General AI Tools", category: "Audio", primaryUse: "Hyper-realistic Voice Clone", pricing: "Partially Free", trust: "High", recommended: true, desc: "Creating podcast ads, dubbing, and expressive voiceovers." },
-            { name: "Grammarly AI", bucket: "General AI Tools", category: "Writing", primaryUse: "Grammar & Tone Polish", pricing: "Partially Free", trust: "High", recommended: true, desc: "Perfecting professional client emails and enterprise documents." },
-            { name: "Motion", bucket: "General AI Tools", category: "Productivity", primaryUse: "AI Calendar Management", pricing: "Paid", trust: "High", recommended: true, desc: "Auto-schedules tasks around your meetings dynamically." },
-            { name: "Surfer SEO", bucket: "General AI Tools", category: "Writing", primaryUse: "Search Engine Optimization", pricing: "Paid", trust: "High", recommended: true, desc: "Data-driven content scoring to rank articles on Google page one." },
-            { name: "Lovable", bucket: "General AI Tools", category: "Coding", primaryUse: "Full-Stack Development MVP", pricing: "Paid", trust: "Moderate", recommended: true, desc: "Creates frontend, backend, and databases from natural language prompts." },
+  <div id="footer-placeholder"></div>
 
-            // BUCKET: Orchestrators & Agents (New Research based on user request)
-            { name: "LangChain", bucket: "Orchestrators & Agents", category: "Framework", primaryUse: "Building LLM Applications", pricing: "Open Source", trust: "High", recommended: true, desc: "The standard framework for chaining prompts, memory, and APIs together." },
-            { name: "LlamaIndex", bucket: "Orchestrators & Agents", category: "Framework", primaryUse: "RAG & Data Ingestion", pricing: "Open Source", trust: "High", recommended: true, desc: "Best-in-class data framework for connecting custom data to LLMs." },
-            { name: "Flowise", bucket: "Orchestrators & Agents", category: "No-Code Orchestrator", primaryUse: "Visual UI for LangChain", pricing: "Open Source", trust: "High", recommended: true, desc: "Drag-and-drop interface to build customized LLM flows effortlessly." },
-            { name: "CrewAI", bucket: "Orchestrators & Agents", category: "Agentic Framework", primaryUse: "Multi-Agent Collaboration", pricing: "Open Source", trust: "High", recommended: true, desc: "Framework for orchestrating role-playing, autonomous AI agents." },
-            { name: "AutoGen (Microsoft)", bucket: "Orchestrators & Agents", category: "Agentic Framework", primaryUse: "Conversational Multi-Agent", pricing: "Open Source", trust: "High", recommended: true, desc: "Enables complex LLM workflows via conversing agents solving tasks." },
-            { name: "Dify", bucket: "Orchestrators & Agents", category: "LLMOps Platform", primaryUse: "Visual App Development", pricing: "Open Source", trust: "High", recommended: true, desc: "Innovation platform combining AI workflow orchestration and BaaS." },
-            { name: "Langflow", bucket: "Orchestrators & Agents", category: "No-Code Orchestrator", primaryUse: "Visual Flow Designer", pricing: "Open Source", trust: "High", recommended: true, desc: "A dynamic graph for LangChain, allowing fast prototyping." },
-            { name: "Semantic Kernel", bucket: "Orchestrators & Agents", category: "Framework", primaryUse: "Enterprise C# / Python Auth", pricing: "Open Source", trust: "High", recommended: true, desc: "Microsoft's lightweight SDK for integrating AI into existing enterprise code." },
-            { name: "AutoGPT", bucket: "Orchestrators & Agents", category: "Autonomous Agent", primaryUse: "Autonomous Scripts", pricing: "Open Source", trust: "Low", recommended: false, desc: "High hype but frequently gets stuck in loops. Mostly experimental." },
-            { name: "BabyAGI", bucket: "Orchestrators & Agents", category: "Autonomous Agent", primaryUse: "Task Management", pricing: "Open Source", trust: "Low", recommended: false, desc: "Experimental autonomous task execution based on objective." },
+  <script src="assets/js/include.js"></script>
+  <script>
+    const aiToolsData = [
+      { name: "ChatGPT", bucket: "General AI Tools", category: "Chatbot", primaryUse: "General Assistance, Logic, Multi-modal", pricing: "Partially Free", trust: "High", recommended: true, desc: "Massive ecosystem & multimodal features. Automates complex reasoning." },
+      { name: "Claude (Anthropic)", bucket: "General AI Tools", category: "Chatbot", primaryUse: "Long-context, Human Writing", pricing: "Partially Free", trust: "High", recommended: true, desc: "Superior human tone and safe coding. Excellent for 100+ page PDF summarization." },
+      { name: "Perplexity", bucket: "General AI Tools", category: "Search", primaryUse: "AI-Powered Research", pricing: "Partially Free", trust: "High", recommended: true, desc: "Real-time web search with citations. Replaces traditional search for deep facts." },
+      { name: "Gemini", bucket: "General AI Tools", category: "Chatbot", primaryUse: "Google Ecosystem Integration", pricing: "Partially Free", trust: "High", recommended: true, desc: "Native access to Gmail, Docs, Drive. Seamless workspace automation." },
+      { name: "Microsoft Copilot", bucket: "General AI Tools", category: "Chatbot", primaryUse: "Enterprise Workflows", pricing: "Partially Free", trust: "High", recommended: true, desc: "Deep integration with Word, Excel, OS. Drafts emails and presentations fast." },
+      { name: "GitHub Copilot", bucket: "General AI Tools", category: "Coding", primaryUse: "IDE Code Completion", pricing: "Paid", trust: "High", recommended: true, desc: "Industry standard for code generation. Writes boilerplate code much faster." },
+      { name: "Cursor", bucket: "General AI Tools", category: "Coding", primaryUse: "AI-First Code Editor", pricing: "Partially Free", trust: "High", recommended: true, desc: "Understands the entire project codebase. Rapid prototyping & bug fixing." },
+      { name: "Midjourney", bucket: "General AI Tools", category: "Image", primaryUse: "High-Art / Photorealism", pricing: "Paid", trust: "High", recommended: true, desc: "Best overall artistic and realistic quality for brand assets." },
+      { name: "Canva Magic Studio", bucket: "General AI Tools", category: "Design", primaryUse: "Non-Designer Graphics", pricing: "Partially Free", trust: "High", recommended: true, desc: "All-in-one suite. Creating social media kits in seconds." },
+      { name: "Notion AI", bucket: "General AI Tools", category: "Productivity", primaryUse: "Knowledge Management", pricing: "Paid", trust: "High", recommended: true, desc: "Organizing and summarizing company wikis seamlessly within docs." },
+      { name: "DeepSeek", bucket: "General AI Tools", category: "Chatbot", primaryUse: "Coding & Heavy Math", pricing: "Partially Free", trust: "Moderate", recommended: true, desc: "High-level technical problem solving and highly efficient inference." },
+      { name: "Runway Gen-3", bucket: "General AI Tools", category: "Video", primaryUse: "Text-to-Video Generation", pricing: "Paid", trust: "High", recommended: true, desc: "B-roll generation and advanced video manipulation features." },
+      { name: "ElevenLabs", bucket: "General AI Tools", category: "Audio", primaryUse: "Hyper-realistic Voice Clone", pricing: "Partially Free", trust: "High", recommended: true, desc: "Creating podcast ads, dubbing, and expressive voiceovers." },
+      { name: "Grammarly AI", bucket: "General AI Tools", category: "Writing", primaryUse: "Grammar & Tone Polish", pricing: "Partially Free", trust: "High", recommended: true, desc: "Perfecting professional client emails and enterprise documents." },
+      { name: "Motion", bucket: "General AI Tools", category: "Productivity", primaryUse: "AI Calendar Management", pricing: "Paid", trust: "High", recommended: true, desc: "Auto-schedules tasks around your meetings dynamically." },
+      { name: "Surfer SEO", bucket: "General AI Tools", category: "Writing", primaryUse: "Search Engine Optimization", pricing: "Paid", trust: "High", recommended: true, desc: "Data-driven content scoring to rank articles on Google page one." },
+      { name: "Lovable", bucket: "General AI Tools", category: "Coding", primaryUse: "Full-Stack Development MVP", pricing: "Paid", trust: "Moderate", recommended: true, desc: "Creates frontend, backend, and databases from natural language prompts." },
+      { name: "LangChain", bucket: "Orchestrators & Agents", category: "Framework", primaryUse: "Building LLM Applications", pricing: "Open Source", trust: "High", recommended: true, desc: "The standard framework for chaining prompts, memory, and APIs together." },
+      { name: "LlamaIndex", bucket: "Orchestrators & Agents", category: "Framework", primaryUse: "RAG & Data Ingestion", pricing: "Open Source", trust: "High", recommended: true, desc: "Best-in-class data framework for connecting custom data to LLMs." },
+      { name: "Flowise", bucket: "Orchestrators & Agents", category: "No-Code Orchestrator", primaryUse: "Visual UI for LangChain", pricing: "Open Source", trust: "High", recommended: true, desc: "Drag-and-drop interface to build customized LLM flows effortlessly." },
+      { name: "CrewAI", bucket: "Orchestrators & Agents", category: "Agentic Framework", primaryUse: "Multi-Agent Collaboration", pricing: "Open Source", trust: "High", recommended: true, desc: "Framework for orchestrating role-playing, autonomous AI agents." },
+      { name: "AutoGen (Microsoft)", bucket: "Orchestrators & Agents", category: "Agentic Framework", primaryUse: "Conversational Multi-Agent", pricing: "Open Source", trust: "High", recommended: true, desc: "Enables complex LLM workflows via conversing agents solving tasks." },
+      { name: "Dify", bucket: "Orchestrators & Agents", category: "LLMOps Platform", primaryUse: "Visual App Development", pricing: "Open Source", trust: "High", recommended: true, desc: "Innovation platform combining AI workflow orchestration and BaaS." },
+      { name: "Langflow", bucket: "Orchestrators & Agents", category: "No-Code Orchestrator", primaryUse: "Visual Flow Designer", pricing: "Open Source", trust: "High", recommended: true, desc: "A dynamic graph for LangChain, allowing fast prototyping." },
+      { name: "Semantic Kernel", bucket: "Orchestrators & Agents", category: "Framework", primaryUse: "Enterprise C# / Python Auth", pricing: "Open Source", trust: "High", recommended: true, desc: "Microsoft's lightweight SDK for integrating AI into existing enterprise code." },
+      { name: "AutoGPT", bucket: "Orchestrators & Agents", category: "Autonomous Agent", primaryUse: "Autonomous Scripts", pricing: "Open Source", trust: "Low", recommended: false, desc: "High hype but frequently gets stuck in loops. Mostly experimental." },
+      { name: "BabyAGI", bucket: "Orchestrators & Agents", category: "Autonomous Agent", primaryUse: "Task Management", pricing: "Open Source", trust: "Low", recommended: false, desc: "Experimental autonomous task execution based on objective." },
+      { name: "Ollama", bucket: "Open Source", category: "Local Inference", primaryUse: "Running LLMs Locally", pricing: "Free", trust: "High", recommended: true, desc: "Get up and running with Llama, Mistral, and other large language models locally." },
+      { name: "Llama 3 (Meta)", bucket: "Open Source", category: "Foundation Model", primaryUse: "Local/Hosted Text Generation", pricing: "Free", trust: "High", recommended: true, desc: "State-of-the-art open weights model with excellent reasoning capabilities." },
+      { name: "Hugging Face", bucket: "Open Source", category: "Model Hub", primaryUse: "Model Discovery & Hosting", pricing: "Partially Free", trust: "High", recommended: true, desc: "The 'GitHub of AI'. Discover, test, and host open-source models." },
+      { name: "Mistral", bucket: "Open Source", category: "Foundation Model", primaryUse: "Efficient Text Generation", pricing: "Free", trust: "High", recommended: true, desc: "Highly efficient open models punching well above their weight class." },
+      { name: "ComfyUI", bucket: "Open Source", category: "Image / Video GUI", primaryUse: "Node-based Image Generation", pricing: "Free", trust: "High", recommended: true, desc: "Powerful graphical node interface for Stable Diffusion and advanced pipelines." },
+      { name: "Stable Diffusion WebUI", bucket: "Open Source", category: "Image GUI", primaryUse: "Local Image Generation", pricing: "Free", trust: "High", recommended: true, desc: "AUTOMATIC1111's standard interface for running image models locally." },
+      { name: "vLLM", bucket: "Open Source", category: "Inference Engine", primaryUse: "High-Throughput Serving", pricing: "Free", trust: "High", recommended: true, desc: "Fast and easy-to-use library for LLM inference and serving." },
+      { name: "LM Studio", bucket: "Open Source", category: "Local Inference", primaryUse: "Desktop GUI for local LLMs", pricing: "Free", trust: "High", recommended: true, desc: "Discover and run local LLMs easily via a clean desktop application." },
+      { name: "Whisper (OpenAI)", bucket: "Open Source", category: "Audio", primaryUse: "Speech Recognition / Translation", pricing: "Free", trust: "High", recommended: true, desc: "Robust, open-source automatic speech recognition system." },
+      { name: "LocalAI", bucket: "Open Source", category: "API Wrapper", primaryUse: "OpenAI drop-in replacement", pricing: "Free", trust: "High", recommended: true, desc: "Self-hosted, community-driven API compatible with OpenAI specifications." }
+    ];
 
-            // BUCKET: Open Source Ecosystem (New Research based on user request)
-            { name: "Ollama", bucket: "Open Source", category: "Local Inference", primaryUse: "Running LLMs Locally", pricing: "Free", trust: "High", recommended: true, desc: "Get up and running with Llama, Mistral, and other large language models locally." },
-            { name: "Llama 3 (Meta)", bucket: "Open Source", category: "Foundation Model", primaryUse: "Local/Hosted Text Generation", pricing: "Free", trust: "High", recommended: true, desc: "State-of-the-art open weights model with excellent reasoning capabilities." },
-            { name: "Hugging Face", bucket: "Open Source", category: "Model Hub", primaryUse: "Model Discovery & Hosting", pricing: "Partially Free", trust: "High", recommended: true, desc: "The 'GitHub of AI'. Discover, test, and host open-source models." },
-            { name: "Mistral", bucket: "Open Source", category: "Foundation Model", primaryUse: "Efficient Text Generation", pricing: "Free", trust: "High", recommended: true, desc: "Highly efficient open models punching well above their weight class." },
-            { name: "ComfyUI", bucket: "Open Source", category: "Image / Video GUI", primaryUse: "Node-based Image Generation", pricing: "Free", trust: "High", recommended: true, desc: "Powerful graphical node interface for Stable Diffusion and advanced pipelines." },
-            { name: "Stable Diffusion WebUI", bucket: "Open Source", category: "Image GUI", primaryUse: "Local Image Generation", pricing: "Free", trust: "High", recommended: true, desc: "AUTOMATIC1111's standard interface for running image models locally." },
-            { name: "vLLM", bucket: "Open Source", category: "Inference Engine", primaryUse: "High-Throughput Serving", pricing: "Free", trust: "High", recommended: true, desc: "Fast and easy-to-use library for LLM inference and serving." },
-            { name: "LM Studio", bucket: "Open Source", category: "Local Inference", primaryUse: "Desktop GUI for local LLMs", pricing: "Free", trust: "High", recommended: true, desc: "Discover and run local LLMs easily via a clean desktop application." },
-            { name: "Whisper (OpenAI)", bucket: "Open Source", category: "Audio", primaryUse: "Speech Recognition / Translation", pricing: "Free", trust: "High", recommended: true, desc: "Robust, open-source automatic speech recognition system." },
-            { name: "LocalAI", bucket: "Open Source", category: "API Wrapper", primaryUse: "OpenAI drop-in replacement", pricing: "Free", trust: "High", recommended: true, desc: "Self-hosted, community-driven API compatible with OpenAI specifications." }
-        ];
+    let currentState = { bucket: 'All', category: 'All', search: '', data: [...aiToolsData] };
+    let categoryChartInstance = null;
+    let pricingChartInstance = null;
 
-        // State Management
-        let currentState = {
-            bucket: 'All',
-            category: 'All',
-            search: '',
-            data: [...aiToolsData]
-        };
+    function init() {
+      populateCategoryFilter();
+      updateMetrics();
+      renderGrid();
+      renderCharts();
+      setupEventListeners();
+    }
 
-        let categoryChartInstance = null;
-        let pricingChartInstance = null;
+    function setupEventListeners() {
+      document.querySelectorAll('.tab-btn').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          document.querySelectorAll('.tab-btn').forEach(t => {
+            t.classList.remove('tab-active');
+            t.classList.add('tab-inactive');
+          });
+          e.target.classList.remove('tab-inactive');
+          e.target.classList.add('tab-active');
+          currentState.bucket = e.target.getAttribute('data-bucket');
+          filterData();
+        });
+      });
 
-        // Initialization
-        function init() {
-            populateCategoryFilter();
-            updateMetrics();
-            renderGrid();
-            renderCharts();
-            setupEventListeners();
+      document.getElementById('categoryFilter').addEventListener('change', (e) => {
+        currentState.category = e.target.value;
+        filterData();
+      });
+
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        currentState.search = e.target.value.toLowerCase();
+        filterData();
+      });
+
+      document.getElementById('clear-filters').addEventListener('click', () => {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = 'All';
+        currentState.search = '';
+        currentState.category = 'All';
+        document.querySelectorAll('.tab-btn').forEach(t => {
+          t.classList.remove('tab-active');
+          t.classList.add('tab-inactive');
+          if (t.getAttribute('data-bucket') === 'All') {
+            t.classList.remove('tab-inactive');
+            t.classList.add('tab-active');
+            currentState.bucket = 'All';
+          }
+        });
+        filterData();
+      });
+    }
+
+    function filterData() {
+      currentState.data = aiToolsData.filter(tool => {
+        const matchBucket = currentState.bucket === 'All' || tool.bucket === currentState.bucket;
+        const matchCategory = currentState.category === 'All' || tool.category === currentState.category;
+        const matchSearch = tool.name.toLowerCase().includes(currentState.search) ||
+                            tool.primaryUse.toLowerCase().includes(currentState.search) ||
+                            tool.desc.toLowerCase().includes(currentState.search);
+        return matchBucket && matchCategory && matchSearch;
+      });
+      renderGrid();
+      updateCharts();
+    }
+
+    function populateCategoryFilter() {
+      const select = document.getElementById('categoryFilter');
+      [...new Set(aiToolsData.map(t => t.category))].sort().forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+      });
+    }
+
+    function renderGrid() {
+      const container = document.getElementById('tools-container');
+      const noResults = document.getElementById('no-results');
+      container.innerHTML = '';
+
+      if (currentState.data.length === 0) {
+        container.style.display = 'none';
+        noResults.style.display = 'block';
+        return;
+      }
+      container.style.display = '';
+      noResults.style.display = 'none';
+
+      currentState.data.forEach(tool => {
+        let bucketClass = 'badge-general', icon = '✨';
+        if (tool.bucket === 'Orchestrators & Agents') { bucketClass = 'badge-orchestrator'; icon = '⚙️'; }
+        if (tool.bucket === 'Open Source') { bucketClass = 'badge-opensource'; icon = '🔓'; }
+
+        let trustClass = 'trust-moderate';
+        if (tool.trust === 'High') trustClass = 'trust-high';
+        if (tool.trust === 'Low') trustClass = 'trust-low';
+
+        const card = document.createElement('div');
+        card.className = 'tool-card';
+        card.innerHTML = `
+          <div class="tool-card-header">
+            <h3>${tool.name}</h3>
+            ${tool.recommended ? '<span class="tool-rec">⭐ Rec</span>' : ''}
+          </div>
+          <div class="tool-tags">
+            <span class="badge ${bucketClass}">${icon} ${tool.bucket.replace(' Tools','').replace(' Ecosystem','')}</span>
+            <span class="badge badge-category">${tool.category}</span>
+          </div>
+          <p class="tool-desc">${tool.desc}</p>
+          <div class="tool-meta">
+            <div class="tool-meta-row"><span class="tool-meta-label">Use Case:</span><span class="tool-meta-value">${tool.primaryUse}</span></div>
+            <div class="tool-meta-row"><span class="tool-meta-label">Pricing:</span><span class="tool-meta-value">${tool.pricing}</span></div>
+            <div class="tool-meta-row"><span class="tool-meta-label">Trust/Stability:</span><span class="tool-meta-value ${trustClass}">${tool.trust}</span></div>
+          </div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function updateMetrics() {
+      document.getElementById('metric-total').textContent = aiToolsData.length;
+      document.getElementById('metric-os').textContent = aiToolsData.filter(t => t.bucket === 'Open Source' || t.pricing === 'Open Source').length;
+      document.getElementById('metric-orch').textContent = aiToolsData.filter(t => t.bucket === 'Orchestrators & Agents').length;
+      document.getElementById('metric-rec').textContent = aiToolsData.filter(t => t.recommended).length;
+    }
+
+    function renderCharts() {
+      Chart.defaults.font.family = "system-ui, sans-serif";
+      Chart.defaults.color = '#b7c7e6';
+
+      categoryChartInstance = new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: getCategoryChartData(),
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right', labels: { boxWidth: 12, padding: 15, color: '#b7c7e6' } },
+            tooltip: { callbacks: { label: function(c) { return ' ' + c.label + ': ' + c.raw + ' tools'; } } }
+          },
+          cutout: '65%'
         }
+      });
 
-        // Setup Listeners
-        function setupEventListeners() {
-            // Tab clicks
-            const tabs = document.querySelectorAll('.tab-btn');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', (e) => {
-                    // Update active styling
-                    tabs.forEach(t => {
-                        t.classList.remove('tab-active');
-                        t.classList.add('tab-inactive');
-                    });
-                    e.target.classList.remove('tab-inactive');
-                    e.target.classList.add('tab-active');
-
-                    // Update state and render
-                    currentState.bucket = e.target.getAttribute('data-bucket');
-                    filterData();
-                });
-            });
-
-            // Category Filter
-            document.getElementById('categoryFilter').addEventListener('change', (e) => {
-                currentState.category = e.target.value;
-                filterData();
-            });
-
-            // Search Input
-            document.getElementById('searchInput').addEventListener('input', (e) => {
-                currentState.search = e.target.value.toLowerCase();
-                filterData();
-            });
-
-            // Clear Filters Button
-            document.getElementById('clear-filters').addEventListener('click', () => {
-                document.getElementById('searchInput').value = '';
-                document.getElementById('categoryFilter').value = 'All';
-                currentState.search = '';
-                currentState.category = 'All';
-                
-                // Reset Tabs to All
-                const tabs = document.querySelectorAll('.tab-btn');
-                tabs.forEach(t => {
-                    t.classList.remove('tab-active');
-                    t.classList.add('tab-inactive');
-                    if(t.getAttribute('data-bucket') === 'All') {
-                        t.classList.remove('tab-inactive');
-                        t.classList.add('tab-active');
-                        currentState.bucket = 'All';
-                    }
-                });
-                
-                filterData();
-            });
+      pricingChartInstance = new Chart(document.getElementById('pricingChart'), {
+        type: 'bar',
+        data: getPricingChartData(),
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: function(c) { return ' Count: ' + c.raw; } } }
+          },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { precision: 0, color: '#b7c7e6' } },
+            x: { grid: { display: false }, ticks: { color: '#b7c7e6' } }
+          }
         }
+      });
+    }
 
-        // Logic: Filter Data based on State
-        function filterData() {
-            currentState.data = aiToolsData.filter(tool => {
-                const matchBucket = currentState.bucket === 'All' || tool.bucket === currentState.bucket;
-                const matchCategory = currentState.category === 'All' || tool.category === currentState.category;
-                const matchSearch = tool.name.toLowerCase().includes(currentState.search) || 
-                                    tool.primaryUse.toLowerCase().includes(currentState.search) ||
-                                    tool.desc.toLowerCase().includes(currentState.search);
-                return matchBucket && matchCategory && matchSearch;
-            });
-            
-            renderGrid();
-            updateCharts();
-        }
+    function updateCharts() {
+      if (categoryChartInstance && pricingChartInstance) {
+        categoryChartInstance.data = getCategoryChartData();
+        categoryChartInstance.update();
+        pricingChartInstance.data = getPricingChartData();
+        pricingChartInstance.update();
+      }
+    }
 
-        // DOM: Populate Dropdown
-        function populateCategoryFilter() {
-            const select = document.getElementById('categoryFilter');
-            const categories = [...new Set(aiToolsData.map(t => t.category))].sort();
-            categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat;
-                option.textContent = cat;
-                select.appendChild(option);
-            });
-        }
+    function getCategoryChartData() {
+      const counts = {};
+      currentState.data.forEach(t => { counts[t.category] = (counts[t.category] || 0) + 1; });
+      const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+      const top = sorted.slice(0, 6);
+      const otherCount = sorted.slice(6).reduce((sum, item) => sum + item[1], 0);
+      if (otherCount > 0) top.push(['Other', otherCount]);
+      return {
+        labels: top.map(i => i[0].length > 16 ? i[0].substring(0, 16) + '...' : i[0]),
+        datasets: [{ data: top.map(i => i[1]), backgroundColor: ['#4F46E5', '#0D9488', '#D97706', '#DB2777', '#2563EB', '#059669', '#9CA3AF'], borderWidth: 0 }]
+      };
+    }
 
-        // DOM: Render Grid Cards
-        function renderGrid() {
-            const container = document.getElementById('tools-container');
-            const noResults = document.getElementById('no-results');
-            container.innerHTML = '';
+    function getPricingChartData() {
+      const counts = {};
+      currentState.data.forEach(t => { counts[t.pricing] = (counts[t.pricing] || 0) + 1; });
+      const labels = Object.keys(counts);
+      return {
+        labels: labels,
+        datasets: [{
+          label: 'Tools',
+          data: labels.map(l => counts[l]),
+          backgroundColor: labels.map(l => {
+            if (l.includes('Free') && !l.includes('Partially')) return '#10B981';
+            if (l.includes('Open Source')) return '#065F46';
+            if (l.includes('Partially')) return '#F59E0B';
+            return '#EF4444';
+          }),
+          borderRadius: 4
+        }]
+      };
+    }
 
-            if (currentState.data.length === 0) {
-                container.classList.add('hidden');
-                noResults.classList.remove('hidden');
-                return;
-            } else {
-                container.classList.remove('hidden');
-                noResults.classList.add('hidden');
-            }
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
 
-            currentState.data.forEach(tool => {
-                // Determine bucket badge color
-                let bucketClass = 'badge-general';
-                let icon = '✨';
-                if (tool.bucket === 'Orchestrators & Agents') { bucketClass = 'badge-orchestrator'; icon = '⚙️'; }
-                if (tool.bucket === 'Open Source') { bucketClass = 'badge-opensource'; icon = '🔓'; }
-
-                // Determine Trust Color
-                let trustClass = 'trust-moderate';
-                if(tool.trust === 'High') trustClass = 'trust-high';
-                if(tool.trust === 'Low') trustClass = 'trust-low';
-
-                const card = document.createElement('div');
-                card.className = 'tool-card p-6 rounded-xl flex flex-col h-full';
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-[#3A3532] truncate pr-2" title="${tool.name}">${tool.name}</h3>
-                        ${tool.recommended ? '<span class="text-xs bg-indigo-50 text-indigo-700 border border-indigo-100 px-2 py-1 rounded-md font-medium whitespace-nowrap">⭐ Rec</span>' : ''}
-                    </div>
-                    <div class="flex flex-wrap gap-2 mb-4 text-xs font-medium">
-                        <span class="px-2.5 py-1 rounded-full ${bucketClass}">${icon} ${tool.bucket.replace(' Tools', '').replace(' Ecosystem', '')}</span>
-                        <span class="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">${tool.category}</span>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-4 flex-grow">${tool.desc}</p>
-                    
-                    <div class="mt-auto border-t border-gray-100 pt-4 text-sm">
-                        <div class="flex justify-between items-center mb-1 text-gray-500">
-                            <span>Use Case:</span>
-                            <span class="font-medium text-gray-800 text-right w-2/3 truncate" title="${tool.primaryUse}">${tool.primaryUse}</span>
-                        </div>
-                        <div class="flex justify-between items-center mb-1 text-gray-500">
-                            <span>Pricing:</span>
-                            <span class="font-medium text-gray-800">${tool.pricing}</span>
-                        </div>
-                        <div class="flex justify-between items-center text-gray-500">
-                            <span>Trust/Stability:</span>
-                            <span class="font-bold ${trustClass}">${tool.trust}</span>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Logic & DOM: Update Top Metrics
-        function updateMetrics() {
-            document.getElementById('metric-total').textContent = aiToolsData.length;
-            document.getElementById('metric-os').textContent = aiToolsData.filter(t => t.bucket === 'Open Source' || t.pricing === 'Open Source').length;
-            document.getElementById('metric-orch').textContent = aiToolsData.filter(t => t.bucket === 'Orchestrators & Agents').length;
-            document.getElementById('metric-rec').textContent = aiToolsData.filter(t => t.recommended).length;
-        }
-
-        // Chart.js Implementations
-        function renderCharts() {
-            // 1. Category Doughnut Chart
-            const ctxCat = document.getElementById('categoryChart').getContext('2d');
-            
-            // 2. Pricing Bar Chart
-            const ctxPrice = document.getElementById('pricingChart').getContext('2d');
-
-            Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
-            Chart.defaults.color = '#6B655F';
-
-            categoryChartInstance = new Chart(ctxCat, {
-                type: 'doughnut',
-                data: getCategoryChartData(),
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 12, padding: 15 } },
-                        tooltip: { callbacks: { label: function(c) { return ' ' + c.label + ': ' + c.raw + ' tools'; } } }
-                    },
-                    cutout: '65%'
-                }
-            });
-
-            pricingChartInstance = new Chart(ctxPrice, {
-                type: 'bar',
-                data: getPricingChartData(),
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { callbacks: { label: function(c) { return ' Count: ' + c.raw; } } }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, grid: { color: '#F0EFEA' }, ticks: { precision: 0 } },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
-        }
-
-        function updateCharts() {
-            if(categoryChartInstance && pricingChartInstance) {
-                categoryChartInstance.data = getCategoryChartData();
-                categoryChartInstance.update();
-
-                pricingChartInstance.data = getPricingChartData();
-                pricingChartInstance.update();
-            }
-        }
-
-        // Data Aggregation for Charts
-        function getCategoryChartData() {
-            const counts = {};
-            currentState.data.forEach(t => { counts[t.category] = (counts[t.category] || 0) + 1; });
-            
-            // Sort to keep top 6, bucket rest into "Other"
-            const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
-            const top = sorted.slice(0, 6);
-            const otherCount = sorted.slice(6).reduce((sum, item) => sum + item[1], 0);
-            
-            if(otherCount > 0) top.push(['Other', otherCount]);
-
-            return {
-                labels: top.map(i => i[0].length > 16 ? i[0].substring(0, 16) + '...' : i[0]),
-                datasets: [{
-                    data: top.map(i => i[1]),
-                    backgroundColor: ['#4F46E5', '#0D9488', '#D97706', '#DB2777', '#2563EB', '#059669', '#9CA3AF'],
-                    borderWidth: 0
-                }]
-            };
-        }
-
-        function getPricingChartData() {
-            const counts = {};
-            currentState.data.forEach(t => { counts[t.pricing] = (counts[t.pricing] || 0) + 1; });
-            const labels = Object.keys(counts);
-            
-            return {
-                labels: labels,
-                datasets: [{
-                    label: 'Tools',
-                    data: labels.map(l => counts[l]),
-                    backgroundColor: labels.map(l => {
-                        if(l.includes('Free') && !l.includes('Partially')) return '#10B981'; // Green
-                        if(l.includes('Open Source')) return '#065F46'; // Dark Green
-                        if(l.includes('Partially')) return '#F59E0B'; // Amber
-                        return '#EF4444'; // Red for Paid
-                    }),
-                    borderRadius: 4
-                }]
-            };
-        }
-
-        // Run on load
-        window.addEventListener('DOMContentLoaded', init);
-    </script>
 </body>
 </html>

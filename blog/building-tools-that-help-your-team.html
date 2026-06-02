@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building Tools That Actually Help Your Team | Arunkumar Panchanana</title>
+  <meta name="description" content="Lessons from shipping real tools — why starting small, solving your own pain, and iterating fast beats big planning." />
+  <meta property="og:title" content="Building Tools That Actually Help Your Team" />
+  <meta property="og:description" content="Lessons from shipping real tools." />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" href="../assets/favicon/favicon.ico" />
+</head>
+<body data-page="blog">
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <div id="nav-placeholder"></div>
+
+  <main id="main-content">
+    <article class="blog-post">
+      <header class="blog-post-header">
+        <div class="blog-post-meta">
+          <span class="blog-tag blog-tag-builder">Tool Builder</span>
+          <span>May 29, 2026</span>
+          <span>· 5 min read</span>
+        </div>
+        <h1>Building Tools That Actually Help Your Team</h1>
+        <p class="hero-text" style="max-width: none;">Lessons from shipping real tools — why starting small, solving your own pain, and iterating fast beats big planning.</p>
+      </header>
+
+      <div class="blog-post-body">
+
+        <p>I've built several tools now — some that people use daily, and some that quietly faded away. The ones that stuck have a few things in common.</p>
+
+        <p>Not technical brilliance. Not elegant code. They stuck because they solved a real, specific, recurring pain point for someone. Here's what I've learned about building tools that actually help.</p>
+
+        <h2>Solve Your Own Problem First</h2>
+
+        <p>Every tool I've built started with a frustration I had myself. <strong>Precision Match</strong> came from spending hours comparing resumes to job descriptions. <strong>Noob → AI Expert</strong> came from wanting a structured path to teach AI without the fluff. <strong>Prompt of the Day</strong> came from wanting to practice AI prompting consistently.</p>
+
+        <p>When you build for yourself, you have a built-in product manager — you. You know exactly what matters, what's annoying, and what can wait. You don't need user research to figure out the requirements. Your own frustration is your compass.</p>
+
+        <h2>Start Embarrassingly Small</h2>
+
+        <p>The first version of Precision Match was a dozen lines of Python. It didn't have a UI. It didn't handle edge cases. But it <em>did</em> give me a useful result in 30 seconds instead of 30 minutes.</p>
+
+        <p>That's the bar for version one: <strong>does it save time on a task you'd otherwise do manually?</strong> If yes, ship it. Add polish later. Most tools never get built because people overestimate what v1 needs to be and underestimate what v2 can become.</p>
+
+        <h2>Optimize for the 80% Use Case</h2>
+
+        <p>Early in my building journey, I spent weeks trying to handle every possible input format, error state, and edge case. The result? A robust tool that nobody used because I'd run out of steam before making it accessible.</p>
+
+        <p>Now I follow the 80/20 rule: build for the 80% use case that covers most users, and handle the edge cases when they actually come up. Most of the time, they never do. And when they do, you have real examples to test against — not hypothetical ones.</p>
+
+        <h2>Ship, Then Ask</h2>
+
+        <p>I used to ask teams what tools they needed. The answer was always vague: "something to help with reporting" or "automation would be nice." Nobody can specify a tool they've never seen.</p>
+
+        <p>Now I ship something small, show it to one person, and ask: "Does this help? What would make it better?" Concrete feedback on a real thing is infinitely more valuable than abstract requirements gathering.</p>
+
+        <h2>Tools Don't Need to Be Perfect</h2>
+
+        <p>Some of my most-used tools have rough edges. The design isn't polished. The code isn't clean. But they solve a problem, and that's enough. A tool that's 80% useful and shipped today is better than a 100% tool that ships next quarter — or never.</p>
+
+        <p>If you're in IT and thinking about building something, my advice is simple: pick one frustration, build the simplest thing that could possibly work, and put it in front of someone today. Not next week. Today.</p>
+
+        <hr />
+
+        <p><em>See the tools I've built on the <a href="../tools.html" style="color: var(--blue);">Tools page</a>. Want to build something together? <a href="../contact.html" style="color: var(--blue);">Let's talk</a>.</em></p>
+
+      </div>
+
+      <nav class="blog-post-nav">
+        <a href="how-i-mentor-it-teams.html">&larr; Previous Post</a>
+        <a href="3-automation-wins.html">Next Post &rarr;</a>
+      </nav>
+
+      <div class="giscus-wrapper">
+        <script src="https://giscus.app/client.js"
+          data-repo="arunkumarpanchanana/arunkumarpanchanana.github.io"
+          data-repo-id=""
+          data-category="Announcements"
+          data-category-id=""
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="dark_dimmed"
+          data-lang="en"
+          crossorigin="anonymous"
+          async>
+        </script>
+      </div>
+    </article>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <script src="../assets/js/include.js"></script>
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('visible', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

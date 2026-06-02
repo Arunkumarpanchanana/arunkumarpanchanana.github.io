@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentoring | Arunkumar Panchanana</title>
+  <meta name="description" content="One-on-one mentoring for IT professionals looking to level up with AI, automation, and smarter workflows." />
+  <meta property="og:title" content="Mentoring with Arunkumar Panchanana" />
+  <meta property="og:description" content="One-on-one mentoring for IT professionals. AI adoption, automation, career growth, and tool building." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/favicon/favicon.ico" />
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <div id="nav-placeholder"></div>
+
+  <main id="main-content">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Mentoring</p>
+        <h1>Let's Grow Together</h1>
+        <p class="hero-text">
+          Practical, hands-on guidance for IT professionals who want to embrace AI,
+          build better systems, and advance their careers.
+        </p>
+      </div>
+    </section>
+
+    <section class="section fade-in">
+      <div class="container">
+        <div class="card" style="text-align: center; max-width: 700px; margin: 0 auto;">
+          <h2>My Mentoring Philosophy</h2>
+          <p>
+            I believe mentoring is about practical growth, not theory. I draw on 15+ years of
+            IT leadership and hands-on tool building to help you solve real problems,
+            gain confidence, and make progress that matters.
+          </p>
+          <p style="color: var(--muted); font-size: 0.95rem;">
+            Note: I take on mentoring as my schedule permits. If I'm currently full, check back
+            or reach out and I'll let you know when I have availability.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section fade-in">
+      <div class="container">
+        <h2 class="section-title">Topics I Cover</h2>
+        <div class="mentoring-topics">
+
+          <div class="topic-card">
+            <h3>AI Adoption for IT Teams</h3>
+            <p>How to introduce AI tools into your workflows without the hype — practical integration, tool selection, and team buy-in.</p>
+          </div>
+
+          <div class="topic-card">
+            <h3>Building Tools from Scratch</h3>
+            <p>Want to build your own tools? I'll guide you through ideation, architecture, and shipping something useful.</p>
+          </div>
+
+          <div class="topic-card">
+            <h3>IT Operations & Service Management</h3>
+            <p>Improving ITSM processes, automation in operations, incident management, and service delivery best practices.</p>
+          </div>
+
+          <div class="topic-card">
+            <h3>Career Growth for IT Pros</h3>
+            <p>Navigating your career path in IT — from technical roles to leadership, building your brand, and finding your focus.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section fade-in">
+      <div class="container">
+        <div class="card" style="text-align: center;">
+          <h2>Book a Session</h2>
+          <p>
+            Ready to work together? Book a mentoring session through my Mentoring Club profile.
+            Let's talk about your goals and how I can help.
+          </p>
+          <div class="button-row" style="justify-content: center; margin-top: 20px;">
+            <a class="button" href="https://www.mentoring-club.com/profiles/arunkumar-panchanana" target="_blank" rel="noopener">
+              Book a Session
+            </a>
+            <a class="button button-secondary" href="contact.html">Have a Question?</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
+
+  <script src="assets/js/include.js"></script>
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('visible', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

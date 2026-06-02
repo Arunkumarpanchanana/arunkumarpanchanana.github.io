@@ -4,94 +4,158 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tools | Arunkumar Panchanana</title>
+  <meta name="description" content="Practical AI tools and automation projects built by Arunkumar Panchanana." />
+  <meta property="og:title" content="Tools by Arunkumar Panchanana" />
+  <meta property="og:description" content="Practical AI tools and automation projects." />
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/favicon/favicon.ico" />
 </head>
 <body>
 
-<header class="site-header">
-  <div class="container nav-wrap">
-    <a href="index.html" class="logo">Arunkumar Panchanana</a>
+  <a href="#main-content" class="skip-link">Skip to content</a>
 
-    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+  <div id="nav-placeholder"></div>
 
-    <nav class="nav" id="site-nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="tools.html" class="active">Tools</a>
-    </nav>
-  </div>
-</header>
-
-<section class="page-hero">
-  <div class="container">
-    <p class="eyebrow">Tools</p>
-    <h1>Projects built for usefulness and clarity.</h1>
-    <p class="hero-text">
-      A growing collection of practical AI and automation tools built to solve
-      focused everyday problems.
-    </p>
-  </div>
-</section>
-
- <section class="section">
-  <div class="container">
-    <h2 class="section-title">Featured Tools</h2>
-    <div class="card-grid">
-
-      <div class="card">
-        <h3>🎓 Noob → AI Expert</h3>
-        <p>🆕 From Zero to AI Engineer in 20 Sessions — 3 Tracks · Completely Free. Real code, real labs, real quizzes. No fluff, no gatekeeping.</p>
-        <a class="button" href="https://arunkumarpanchanana.github.io/Noob-to-AI-Expert/">Start Learning</a>
+  <main id="main-content">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Tools</p>
+        <h1>Projects built for usefulness and clarity.</h1>
+        <p class="hero-text">
+          A growing collection of practical AI and automation tools built to solve focused everyday problems.
+        </p>
       </div>
-      <div class="card">
-        <h3>🎯 Precision Match</h3>
-        <p>Analyze how well a resume matches a job description and highlight missing skills.</p>
-        <a class="button" href="https://arunkumarpanchanana.github.io/Precision-Match/">Open Tool</a>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="tools-controls">
+          <input type="text" id="toolSearch" class="tools-search" placeholder="Search tools..." />
+          <select id="toolCategory" class="tools-filter">
+            <option value="all">All Categories</option>
+            <option value="AI Learning">AI Learning</option>
+            <option value="Productivity">Productivity</option>
+            <option value="Career">Career</option>
+            <option value="Content">Content</option>
+          </select>
+        </div>
+
+        <div class="card-grid" id="toolGrid">
+
+          <div class="card" data-category="AI Learning">
+            <h3>🎓 Noob → AI Expert</h3>
+            <p>From Zero to AI Engineer in 20 Sessions — 3 Tracks, completely free. Real code, labs, and quizzes.</p>
+            <a class="button" href="https://arunkumarpanchanana.github.io/Noob-to-AI-Expert/" target="_blank" rel="noopener">Start Learning</a>
+          </div>
+
+          <div class="card" data-category="Career">
+            <h3>🎯 Precision Match</h3>
+            <p>Analyze how well a resume matches a job description and highlight missing skills.</p>
+            <a class="button" href="https://arunkumarpanchanana.github.io/Precision-Match/" target="_blank" rel="noopener">Open Tool</a>
+          </div>
+
+          <div class="card" data-category="Productivity">
+            <h3>🧠 Prompt of the Day</h3>
+            <p>Daily prompts to improve your AI usage.</p>
+            <a class="button" href="https://arunkumarpanchanana.github.io/prompt-of-the-day/" target="_blank" rel="noopener">Open Tool</a>
+          </div>
+
+          <div class="card" data-category="AI Learning">
+            <h3>🧠 AI Concept of the Day</h3>
+            <p>One AI concept every morning. 5 minutes to read, 1 minute to test yourself.</p>
+            <a class="button" href="https://arunkumarpanchanana.github.io/ai-concept-of-the-day/" target="_blank" rel="noopener">Open Tool</a>
+          </div>
+
+          <div class="card" data-category="Content">
+            <h3>📰 AI Newsletter Digest</h3>
+            <p>Stay updated with AI news without noise.</p>
+            <a class="button" href="https://arunkumarpanchanana.github.io/ai-newsletter-digest/" target="_blank" rel="noopener">Open Tool</a>
+          </div>
+
+          <div class="card" data-category="AI Learning">
+            <h3>🤖 AI Ecosystem Compendium</h3>
+            <p>Interactive directory of 40+ AI tools — General AI, Orchestrators, and Open Source. With charts and filters.</p>
+            <a class="button" href="ai-tools.html">Explore Compendium</a>
+          </div>
+
+          <div class="card" data-category="Career">
+            <h3>📘 ITIL Mastery</h3>
+            <p>Master ITIL best practices with structured learning paths, quizzes, and practical scenarios for IT service management.</p>
+            <a class="button" href="https://arunkumarpanchanana.github.io/ITIL-Mastery/" target="_blank" rel="noopener">Start Learning</a>
+          </div>
+
+          <div class="card" data-category="AI Learning">
+            <h3>🤖 Claude Mastery</h3>
+            <p>Deep-dive into Claude AI — learn advanced prompting, use cases, and techniques to get the most out of Anthropic's Claude.</p>
+            <a class="button" href="https://arunkumarpanchanana.github.io/Claude-Mastery/" target="_blank" rel="noopener">Start Learning</a>
+          </div>
+
+        </div>
+
+        <div id="noToolResults" class="hidden" style="text-align: center; padding: 40px 0; color: var(--muted); display: none;">
+          <p>No tools match your search. Try a different filter.</p>
+        </div>
       </div>
+    </section>
+  </main>
 
-      <div class="card">
-        <h3>🧠 Prompt of the Day</h3>
-        <p>Daily prompts to improve your AI usage.</p>
-        <a class="button" href="https://arunkumarpanchanana.github.io/prompt-of-the-day/">Open Tool</a>
-      </div>
+  <div id="footer-placeholder"></div>
 
-      <div class="card">
-        <h3>🧠 AI Concept of the Day</h3>
-        <p>One AI concept every morning. 5 minutes to read, 1 minute to test yourself.</p>
-        <a class="button" href="https://arunkumarpanchanana.github.io/ai-concept-of-the-day/">Open Tool</a>
-      </div>
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&uarr;</button>
 
-      <div class="card">
-        <h3>📰 AI Newsletter Digest</h3>
-        <p>Stay updated with AI news without noise.</p>
-        <a class="button" href="https://arunkumarpanchanana.github.io/ai-newsletter-digest/">Open Tool</a>
-      </div>
+  <script src="assets/js/include.js"></script>
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('visible', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
-    </div>
-  </div>
-</section> 
+    const searchInput = document.getElementById('toolSearch');
+    const categoryFilter = document.getElementById('toolCategory');
+    const toolGrid = document.getElementById('toolGrid');
+    const noResults = document.getElementById('noToolResults');
 
-<footer class="footer">
-  <div class="container">
-    <p>Arunkumar Panchanana • AI tools • Automation • IT Leadership</p>
-    <p>Email: <a href="mailto:arunkumar.panchanana@gmail.com">arunkumar.panchanana@gmail.com</a></p>
-  </div>
-</footer>
+    function filterTools() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const category = categoryFilter.value;
+      const cards = toolGrid.querySelectorAll('.card');
+      let visibleCount = 0;
 
-<script>
-  const toggleButton = document.querySelector('.menu-toggle');
-  const nav = document.querySelector('#site-nav');
+      cards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        const cat = card.getAttribute('data-category');
 
-  toggleButton.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('nav-open');
-    toggleButton.classList.toggle('menu-open');
-    toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  });
-</script>
+        const matchesSearch = title.includes(searchTerm) || desc.includes(searchTerm);
+        const matchesCategory = category === 'all' || cat === category;
+
+        if (matchesSearch && matchesCategory) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    searchInput.addEventListener('input', filterTools);
+    categoryFilter.addEventListener('change', filterTools);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>
