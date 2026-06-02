@@ -11,8 +11,8 @@
   function setActiveLink(doc) {
     const links = doc.querySelectorAll('#site-nav a');
     links.forEach(link => {
-      const href = link.getAttribute('href').replace('.html', '');
-      if (href === page || (page === '' && href === 'index')) {
+      let href = link.getAttribute('href').replace('.html', '').replace(/^\/+/, '') || 'index';
+      if (href === page) {
         link.classList.add('active');
       }
     });
