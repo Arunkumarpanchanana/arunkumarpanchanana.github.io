@@ -4,9 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>404 — Page Not Found | Arunkumar Panchanana</title>
-  <meta name="description" content="Page not found." />
+  <meta name="description" content="Page not found. Let's get you back on track." />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="assets/favicon/favicon.ico" />
+
 </head>
 <body>
 
@@ -15,11 +16,29 @@
   <main>
     <section class="error-page">
       <div class="container">
-        <h1>404</h1>
-        <p>This page doesn't exist — or it's hiding from AI.</p>
+        <span class="error-badge">⚡ 404 — Not Found</span>
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">Looks like this page slipped past the firewall</h2>
+        <p class="error-msg">
+          Even my AI couldn't trace this one — the URL may be mistyped, moved,
+          or never made it to production. Let's get you back on track.
+        </p>
+
+        <div class="error-quick">
+          <h3>You might be looking for…</h3>
+          <div class="error-links">
+            <a class="error-link" href="/"><span class="icon">🏠</span> Home<span class="arrow">→</span></a>
+            <a class="error-link" href="/experience.html"><span class="icon">💼</span> Experience<span class="arrow">→</span></a>
+            <a class="error-link" href="/ai-tools.html"><span class="icon">🛠️</span> AI Tools Compendium<span class="arrow">→</span></a>
+            <a class="error-link" href="/tools.html"><span class="icon">🧰</span> My Tools<span class="arrow">→</span></a>
+            <a class="error-link" href="/blog.html"><span class="icon">📝</span> Blog<span class="arrow">→</span></a>
+            <a class="error-link" href="/contact.html"><span class="icon">📬</span> Contact<span class="arrow">→</span></a>
+          </div>
+        </div>
+
         <div class="button-row" style="justify-content: center;">
-          <a class="button" href="index.html">Go Home</a>
-          <a class="button button-secondary" href="tools.html">Browse Tools</a>
+          <a class="button" href="/">Go Home</a>
+          <a class="button button-secondary" href="/tools.html">Browse Tools</a>
         </div>
       </div>
     </section>
